@@ -1,13 +1,14 @@
-import Input from "../InputForm/Input"
-import Button from "../Button/Button"
+import { Input } from "@material-tailwind/react";
 
 const RegisterForm = () => {
   return (
     <>
-      <Input type='text' placeholder='Email' />
-      <Input type='text' placeholder='Username' />
-      <Input type='text' placeholder='Full Name' />
-      <Input type='password' placeholder='Password' />
+      <div className="grid gap-2 w-72">
+        <Input label="Email " color="white" />
+        <Input label="Username " color="white" />
+        <Input label="Full Name " color="white" />
+        <Input label="Password" type="password" color="white" />
+      </div>
     </>
   )
 }

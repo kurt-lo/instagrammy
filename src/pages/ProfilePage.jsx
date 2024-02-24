@@ -1,13 +1,13 @@
-import Home from "../components/Home/Home"
+import Profile from "../components/Profile/Profile"
 import Sidebar from "../components/Sidebar/Sidebar"
 
-const HomePage = () => {
+const ProfilePage = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <Home />
+      <Profile />
     </div>
   )
 }
 
-export default HomePage
+export default ProfilePage
