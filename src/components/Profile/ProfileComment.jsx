@@ -1,5 +1,4 @@
 import {
-    Dialog,
     Avatar
   } from "@material-tailwind/react";
 

@@ -1,12 +1,11 @@
 import igLogo from '../assets/images/logo.png'
-import googleLogo from '../assets/images/google.png'
 import playstore from '../assets/images/playstore.png'
 import microsoft from '../assets/images/microsoft.png'
-import { Button } from "@material-tailwind/react";
 import { Link } from 'react-router-dom'
 import LoginForm from '../components/Login/LoginForm'
 import { useState } from 'react'
 import RegisterForm from '../components/Register/RegisterForm'
+import LoginGoogle from '../components/Login/LoginGoogle';
 
 const LoginPage = () => {
 
@@ -18,18 +17,12 @@ const LoginPage = () => {
                 <div className='flex flex-col justify-center items-center border rounded-sm py-[2rem] min-w-[25rem]'>
                     <img className='filter invert' src={igLogo} alt="Instagram Logo" />
                     {isLogin ? <LoginForm /> : <RegisterForm />}
-                    <Button size='sm' type='submit' className='mt-[1rem] font-[500] w-72' color='blue'>
-                        {isLogin ? 'Log in' : 'Sign up'}
-                    </Button>
                     <div className="flex items-center justify-center w-[70%] my-5">
                         <div className="flex-2 w-full h-[1px] bg-gray-300"></div>
                         <span className="mx-[1rem] text-sm text-gray-500">OR</span>
                         <div className="flex-2 w-full h-[1px] bg-gray-300"></div>
                     </div>
-                    <div className='flex gap-[.5rem] justify-center items-center cursor-pointer text-white' onClick={() => console.log('clicked')}>
-                        <img src={googleLogo} className='h-5 w-5' alt="Google Logo" />
-                        <span className='text-slate-200 text-sm'>Log in with Google</span>
-                    </div>
+                    <LoginGoogle isLogin={isLogin} />
                 </div>
                 <div className='flex justify-center items-center gap-2 text-sm border rounded-sm mt-[1rem] py-[1rem] min-w-[25rem]'>
                     <span className='text-white'>{isLogin ? "Don't have an account?" : "Already have an account?"}</span>

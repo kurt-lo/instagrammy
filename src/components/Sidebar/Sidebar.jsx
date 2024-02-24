@@ -6,10 +6,14 @@ import { LuPlusSquare } from "react-icons/lu";
 import { IoIosLogOut } from "react-icons/io";
 import { FaInstagram } from "react-icons/fa";
 import igLogo from '../../assets/images/logo.png'
+import useLogout from "../hooks/useLogout";
 
 const aClass = 'flex items-center justify-center md:px-[.5rem] md:py-[.5rem] md:justify-start md:gap-[1rem] cursor-pointer rounded-md md:hover:bg-white md:hover:text-darkBlue duration-300 ease-in-out'
 
 const Sidebar = () => {
+
+    const { handleLogout } = useLogout()
+
     return (
         <div className="flex flex-col h-[100vh] sticky left-0 top-0 w-full max-w-[4.5rem] md:max-w-[16rem] px-0 py-[2rem] md:p-[2rem] shadow-xl shadow-blue-gray-900/5 bg-slate text-white border-r rounded-none">
             <div className="flex justify-center md:justify-start">
@@ -59,7 +63,9 @@ const Sidebar = () => {
                 </li>
             </ul>
             <Tooltip content="Log out" placement="right" className='md:hidden'>
-                <div className={`${aClass} mt-auto`}>
+                <div className={`${aClass} mt-auto`}
+                    onClick={handleLogout}
+                >
                     <IoIosLogOut className="h-5 w-5" />
                     <span className="hidden md:block">Log out</span>
                 </div>
