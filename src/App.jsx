@@ -1,21 +1,23 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage';
-import { auth } from './firebase';
-import { useAuthState } from "react-firebase-hooks/auth";
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import useUserStore from './store/useUserStore';
 
 function App() {
 
-  const [userAuthenticated] = useAuthState(auth);
+  const userAuthenticated = useUserStore(state => state.user)
 
   return (
     <>
       <Routes>
-        <Route path='/' element={userAuthenticated ? <HomePage /> : <Navigate to='/login' />} />
-        <Route path='/login' element={!userAuthenticated ? <LoginPage /> : <Navigate to='/' />} />
-        <Route path='/:username' element={<ProfilePage />} />
-      </Routes>
+        <Route element={userAuthenticated ? <PrivateRoute /> : <LoginPage />}>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/:username' element={<ProfilePage />} />
+        </Route>
+        <Route path='/login' element={userAuthenticated ? <HomePage /> : <LoginPage />} />
+      </Routes >
     </>
   )
 }
