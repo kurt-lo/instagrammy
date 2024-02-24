@@ -1,11 +1,11 @@
 import ProfileInfo from "./ProfileInfo"
-import ProfilePost from "./ProfilePost"
+import ProfilePosts from "./ProfilePosts"
 
 const Profile = () => {
   return (
     <div className="flex-1 text-white">
         <ProfileInfo />
-        <ProfilePost />
+        <ProfilePosts />
     </div>
   )
 }
