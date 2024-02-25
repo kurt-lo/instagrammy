@@ -29,7 +29,7 @@ const useFetchUsername = (username) => {
                 })
                 
                 setUserProfile(userDocument)
-                console.log(userDocument)
+                // console.log(userDocument)
             } catch (error) {
                 console.log(error.message)
                 showAlertFunction(error.message)

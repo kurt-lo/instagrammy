@@ -59,7 +59,7 @@ const Sidebar = () => {
                 <li>
                     <Tooltip content="Profile" placement="right" className='md:hidden'>
                         <Link className={aClass} to={`/${userLoggedIn.username}`}>
-                            <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" size="sm" />
+                            <Avatar src={userLoggedIn.profilePicURL} alt='Profile Picture' size="sm" />
                             <span className="hidden md:block">Profile</span>
                         </Link>
                     </Tooltip>
