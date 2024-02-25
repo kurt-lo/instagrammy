@@ -2,6 +2,8 @@ import { auth, firestore } from "../../firebase";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import useUserStore from "../../store/useUserStore";
 import { doc, getDoc } from "firebase/firestore";
+import { useState } from "react";
+import useShowAlert from "./useShowAlert";
 
 const useLogin = () => {
 
@@ -13,10 +15,12 @@ const useLogin = () => {
     ] = useSignInWithEmailAndPassword(auth);
     const userLoggedIn = useUserStore(state => state.login)
 
+    const { showAlert, alertMessage, showAlertFunction } = useShowAlert()
+
     const loginWithEmailAndPassword = async (email, password) => {
         try {
             if (!email || !password) {
-                console.log('Please provide username or password')
+                showAlertFunction('Please provide both email and password')
                 return
             }
 
@@ -30,13 +34,16 @@ const useLogin = () => {
             }
         } catch (error) {
             console.log(error.message)
+            showAlertFunction(error.message);
         }
     }
 
     return {
         loginWithEmailAndPassword,
         loading,
-        error
+        error,
+        showAlert,
+        alertMessage,
     }
 }
 

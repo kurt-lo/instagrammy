@@ -13,7 +13,7 @@ const RegisterForm = () => {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  const { loading, error, registerWithEmailAndPassword } = useRegisterUserWithEmailAndPassword()
+  const { loading, error, registerWithEmailAndPassword, showAlert, showAlertFunction, alertMessage } = useRegisterUserWithEmailAndPassword()
 
   // const handleRegisterButton = async () => {
   //   try {
@@ -48,6 +48,7 @@ const RegisterForm = () => {
             )}
           </IconButton>
         </div>
+        {showAlert && <Alert color="red" className="text-sm">{alertMessage}</Alert>}
         {error && <Alert color="red" className="text-sm">{error.message}</Alert>}
         <Button size='sm' type='submit' className='mt-[1rem] font-[500] w-72' color='blue'
           loading={loading}

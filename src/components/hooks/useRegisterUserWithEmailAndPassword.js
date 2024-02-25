@@ -2,6 +2,7 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth, firestore } from '../../firebase/index';
 import useUserStore from '../../store/useUserStore';
 import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import useShowAlert from './useShowAlert';
 
 const useRegisterUserWithEmailAndPassword = () => {
 
@@ -13,9 +14,11 @@ const useRegisterUserWithEmailAndPassword = () => {
     ] = useCreateUserWithEmailAndPassword(auth);
     const userLoggedIn = useUserStore(state => state.login)
 
+    const { showAlert, alertMessage, showAlertFunction } = useShowAlert()
+
     const registerWithEmailAndPassword =  async (email, username, fullName, password) => {
         if (!email || !password || !username || !fullName) {
-            console.log('Please provide all the fields!')
+            showAlertFunction('Please provide all the fields!')
             return
         }
 
@@ -33,6 +36,7 @@ const useRegisterUserWithEmailAndPassword = () => {
             const newRegisterUser = await createUserWithEmailAndPassword(email, password)
             if (!newRegisterUser && error) {
                 console.log(error.message)
+                showAlertFunction(error.message)
                 return
             }
 
@@ -55,13 +59,17 @@ const useRegisterUserWithEmailAndPassword = () => {
             }
         } catch (error) {
             console.log(error.message)
+            showAlertFunction(error.message)
         }
     }
 
     return {
         registerWithEmailAndPassword,
         loading,
-        error
+        error,
+        showAlert, 
+        alertMessage, 
+        showAlertFunction
     }
 }
 

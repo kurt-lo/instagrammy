@@ -1,10 +1,10 @@
 import { create } from "zustand";
+import { createAuthSlice } from "./createAuthSlice";
+import { createUserProfileSlice } from "./createUserProfileSlice";
 
-const useUserStore = create((set) => ({
-    user: JSON.parse(localStorage.getItem('user-info-ig-clone')),
-    login: (user) => set({ user }),
-    logout: () => set({ user: null }),
-    setUser: (user) => ({ user }),
+const useUserStore = create((...a) => ({
+    ...createAuthSlice(...a),
+    ...createUserProfileSlice(...a),
 }))
 
 export default useUserStore

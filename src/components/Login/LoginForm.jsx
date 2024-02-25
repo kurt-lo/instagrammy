@@ -3,24 +3,21 @@ import { useState } from "react";
 import useLogin from "../hooks/useLogin";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
-import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
-
-  const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false);
 
-  const { loading, error, loginWithEmailAndPassword } = useLogin()
+  const { loading, error, loginWithEmailAndPassword , showAlert, alertMessage } = useLogin()
 
   return (
     <>
       <div className="grid gap-2 w-72">
         <Input value={email} label="Email or username" color="white"
           onChange={(e) => setEmail(e.target.value)} />
-                <div className="relative flex">
+        <div className="relative flex">
           <Input
             value={password}
             label="Password"
@@ -38,6 +35,7 @@ const LoginForm = () => {
             )}
           </IconButton>
         </div>
+        {showAlert && <Alert color="red" className="text-sm">{alertMessage}</Alert>}
         {error && <Alert color="red" className="text-sm">{'Invalid Email or Password' || error.message}</Alert>}
         <Button size='sm' type='submit' className='mt-[1rem] font-[500] w-72' color='blue'
           loading={loading}
