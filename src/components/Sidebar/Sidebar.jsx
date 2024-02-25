@@ -1,5 +1,4 @@
 import { Avatar, Tooltip, Dialog, IconButton, Input, Button } from "@material-tailwind/react";
-import { IoSearchSharp } from "react-icons/io5";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoHomeFill } from "react-icons/go";
 import { GoSearch } from "react-icons/go";
@@ -21,14 +20,14 @@ const Sidebar = () => {
     const { handleLogout } = useLogout()
     const userLoggedIn = useUserStore(state => state.user)
 
-    const { user, isLoading, getUserProfile, setUser } = useSearchUser()
+    const { isLoading, fetchUser, searchUser, setSearchUser } = useSearchUser()
     const searchRef = useRef(null)
 
     const handleSearch = (e) => {
         e.preventDefault()
-        getUserProfile(searchRef.current.value)
+        fetchUser(searchRef.current.value)
     }
-    console.log(user)
+    console.log(searchUser)
 
     //for opening and closing the search modal
     const [open, setOpen] = useState(false);
@@ -103,13 +102,13 @@ const Sidebar = () => {
                 <h2 className='text-lg py-[1.2rem] text-darkBlue'>Search by Username</h2>
                 <div className='relative'>
                     <Input type='text' label="Username" inputRef={searchRef} />
-                    <IconButton variant="text" className='!absolute right-1 bottom-0'
+                    <Button variant="text" className='!absolute right-1 bottom-0'
                         type="submit"
                         loading={isLoading}
                         onClick={handleSearch}
                     >
-                        <IoSearchSharp size={22} className='font-[700]' />
-                    </IconButton>
+                        Search
+                    </Button>
                 </div>
             </Dialog>
         </>
