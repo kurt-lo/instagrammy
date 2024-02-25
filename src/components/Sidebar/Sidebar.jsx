@@ -7,12 +7,15 @@ import { IoIosLogOut } from "react-icons/io";
 import { FaInstagram } from "react-icons/fa";
 import igLogo from '../../assets/images/logo.png'
 import useLogout from "../hooks/useLogout";
+import { Link } from "react-router-dom";
+import useUserStore from "../../store/useUserStore";
 
 const aClass = 'flex items-center justify-center md:px-[.5rem] md:py-[.5rem] md:justify-start md:gap-[1rem] cursor-pointer rounded-md md:hover:bg-white md:hover:text-darkBlue duration-300 ease-in-out'
 
 const Sidebar = () => {
 
     const { handleLogout } = useLogout()
+    const userLoggedIn = useUserStore(state => state.user)
 
     return (
         <div className="flex flex-col h-[100vh] sticky left-0 top-0 w-full max-w-[4.5rem] md:max-w-[16rem] px-0 py-[2rem] md:p-[2rem] shadow-xl shadow-blue-gray-900/5 bg-slate text-white border-r rounded-none">
@@ -23,10 +26,10 @@ const Sidebar = () => {
             <ul className="flex flex-col gap-[2rem] md:gap-[1rem]">
                 <li>
                     <Tooltip content="Home" placement="right" className='md:hidden'>
-                        <a className={aClass}>
+                        <Link to='/' className={aClass}>
                             <GoHomeFill className="h-6 w-6" />
                             <span className="hidden md:block">Home</span>
-                        </a>
+                        </Link>
                     </Tooltip>
                 </li>
                 <li>
@@ -55,10 +58,10 @@ const Sidebar = () => {
                 </li>
                 <li>
                     <Tooltip content="Profile" placement="right" className='md:hidden'>
-                        <a className={aClass}>
+                        <Link className={aClass} to={`/${userLoggedIn.username}`}>
                             <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" size="sm" />
                             <span className="hidden md:block">Profile</span>
-                        </a>
+                        </Link>
                     </Tooltip>
                 </li>
             </ul>
