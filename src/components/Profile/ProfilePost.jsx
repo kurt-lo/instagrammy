@@ -8,7 +8,8 @@ import {
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
-import { useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import { useRef, useState } from "react";
 import ProfileComment from "./ProfileComment";
 import useFetchUserPosts from "../hooks/useFetchUserPosts";
 import useUserStore from "../../store/useUserStore";
@@ -16,6 +17,7 @@ import { deleteObject, ref } from "firebase/storage";
 import { firestore, storage } from "../../firebase";
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import useCreateComment from "../hooks/useCreateComment";
+import useLikePost from "../hooks/useLikePost";
 
 const ProfilePost = () => {
 
@@ -33,6 +35,8 @@ const ProfilePost = () => {
   const [isDeleted, setIsDeleted] = useState(false)
   // State for comment input
   const [comment, setComment] = useState('')
+  // Ref for comment in post
+  const commentRef = useRef(null)
 
   const handleOpen = (post) => {
     setSelectedPost(post);
@@ -79,7 +83,6 @@ const ProfilePost = () => {
     setComment('')
   }
 
-
   // console.log(posts)
   // console.log(selectedPost)
   return (
@@ -108,29 +111,42 @@ const ProfilePost = () => {
             </div>
             <div className="flex flex-col text-darkBlue flex-1 px-[2rem]">
               <div className="flex items-center gap-2 py-[1rem]">
-                <Avatar src={userProfile.profilePicURL} alt="avatar" size="xs" />
-                <span className="text-sm font-[700]">{userProfile.username}</span>
-                {userLoggedIn?.uid === userProfile.uid && (
-                  <Button className="ml-auto cursor-pointer"
-                    loading={isDeleted}
-                    onClick={handleDeletePost}
-                  >
-                    <MdDeleteOutline size={20} />
-                  </Button>
-                )}
+                <div className="flex gap-2">
+                  <div>
+                    <Avatar src={userProfile.profilePicURL} alt="avatar" size="xs" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-[700]">{userProfile.username}</span>
+                    <span className="text-sm">{selectedPost.caption}</span>
+                  </div>
+                </div>
+                <div className="ml-auto">
+                  {userLoggedIn?.uid === userProfile.uid && (
+                    <Button className="cursor-pointer"
+                      loading={isDeleted}
+                      onClick={handleDeletePost}
+                    >
+                      <MdDeleteOutline size={20} />
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="h-[1px] bg-gray-300"></div>
               <div className=" overflow-y-scroll h-[10rem] sm:h-[5rem] lg:h-[20rem]">
-                <ProfileComment selectedPost={selectedPost} posts={posts} />
+                <ProfileComment
+                  selectedPost={selectedPost}
+                />
               </div>
               <div className="mt-auto pb-[2rem] sm:pb-2 md:pb-[2rem] pt-[2rem] sm:pt-0">
                 <div className="flex gap-2">
-                  <FaRegHeart size={25} />
-                  <FaRegComment size={25} />
+                <button onClick={() => handleLikePost(selectedPost)}>
+                  {selectedPost.isLiked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
+                </button>
+                  <FaRegComment size={25} onClick={() => commentRef.current.focus()} className="cursor-pointer" />
                 </div>
-                <span className="text-sm font-[700]">{selectedPost.likes || 0} likes</span>
+                <span className="text-sm font-[700]">0 likes</span>
                 <div className="flex w-full justify-between items-center gap-[.5rem] p-0 bottom-0">
-                  <input value={comment} type="text" placeholder="Add a comment..." className="text-sm w-full bg-transparent focus:border-darkBlue focus:border-b focus:outline-none"
+                  <input ref={commentRef} value={comment} type="text" placeholder="Add a comment..." className="text-sm w-full bg-transparent focus:border-darkBlue focus:border-b focus:outline-none"
                     onChange={(e) => setComment(e.target.value)}
                   />
                   <Button className="text-[12px] font-[700]"
