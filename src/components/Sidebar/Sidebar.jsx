@@ -111,7 +111,7 @@ const Sidebar = () => {
                             Search
                         </Button>
                     </div>
-                {searchUser && <SuggestionUsers searchUser={searchUser} setSearchUser={setSearchUser} />}
+                {searchUser && <SuggestionUsers searchUser={searchUser} setSearchUser={setSearchUser} userColor='black' />}
             </Dialog>
         </>
     )

@@ -30,11 +30,12 @@ const useFollowAndUnfollowUser = (userId) => {
 					...userLoggedIn,
 					following: userLoggedIn.following.filter((uid) => uid !== userId),
 				});
-				if (userProfile)
+				if (userProfile) {
 					setUserProfile({
 						...userProfile,
 						followers: userProfile.followers.filter((uid) => uid !== userLoggedIn.uid),
 					});
+				}
 
 				localStorage.setItem(
 					"user-info-ig-clone",
@@ -51,11 +52,12 @@ const useFollowAndUnfollowUser = (userId) => {
 					following: [...userLoggedIn.following, userId],
 				});
 
-				if (userProfile)
+				if (userProfile) {
 					setUserProfile({
 						...userProfile,
 						followers: [...userProfile.followers, userLoggedIn.uid],
 					});
+				}
 
 				localStorage.setItem(
 					"user-info-ig-clone",

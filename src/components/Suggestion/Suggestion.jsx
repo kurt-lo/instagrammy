@@ -5,7 +5,7 @@ const Suggestion = () => {
   return (
     <div className="text-white text-sm hidden lg:block">
       <SuggestionAuthUser />
-      {/* <SuggestionUserContent /> */}
+      <SuggestionUserContent />
     </div>
   )
 }
