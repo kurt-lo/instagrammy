@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import { useRef, useState } from "react";
 import useSearchUser from "../hooks/useSearchUser";
+import SuggestionUsers from "../Suggestion/SuggestionUsers";
 
 const aClass = 'flex items-center justify-center md:px-[.5rem] md:py-[.5rem] md:justify-start md:gap-[1rem] cursor-pointer rounded-md md:hover:bg-white md:hover:text-darkBlue duration-300 ease-in-out'
 
@@ -100,16 +101,17 @@ const Sidebar = () => {
                     <AiOutlineClose size={22} />
                 </IconButton>
                 <h2 className='text-lg py-[1.2rem] text-darkBlue'>Search by Username</h2>
-                <div className='relative'>
-                    <Input type='text' label="Username" inputRef={searchRef} />
-                    <Button variant="text" className='!absolute right-1 bottom-0'
-                        type="submit"
-                        loading={isLoading}
-                        onClick={handleSearch}
-                    >
-                        Search
-                    </Button>
-                </div>
+                    <div className='relative'>
+                        <Input type='text' label="Username" inputRef={searchRef} />
+                        <Button variant="text" className='!absolute right-1 bottom-0'
+                            type="submit"
+                            loading={isLoading}
+                            onClick={handleSearch}
+                        >
+                            Search
+                        </Button>
+                    </div>
+                {searchUser && <SuggestionUsers searchUser={searchUser} setSearchUser={setSearchUser} />}
             </Dialog>
         </>
     )
