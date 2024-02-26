@@ -1,18 +1,29 @@
 import {
     Avatar
-  } from "@material-tailwind/react";
+} from "@material-tailwind/react";
+import useUserStore from "../../store/useUserStore";
 
-const ProfileComment = () => {
+const ProfileComment = ({ post }) => {
+
+    const userLoggedIn = useUserStore(state => state.user)
+
     return (
         <div className="flex pt-[1rem] text-sm gap-2">
-            <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" size="xs" />
+            <Avatar src={userLoggedIn.profilePicURL} alt="avatar" size="xs" />
             <div>
                 <div>
-                    <span className="text-[12px] font-[700]">Kurtlo</span>
-                    <span className="text-[12px]">2d ago</span>
+                    <div className="flex gap-1">
+                        <span className="text-[12px] font-[700]">{userLoggedIn.username}</span>
+                        <span className="text-[12px]">2d ago</span>
+                    </div>
+                    <div>
+                        <h5>{post.caption}</h5>
+                    </div>
                 </div>
-                <div>
-                    <span className="text-[12px] text-gray-800">Wazuuppp!</span>
+                <div className="pt-[1rem]">
+                    <span className="text-[12px] text-gray-800 ">
+                        {post.comments.length === 0 ? "No comment yet" : `${post.comments}`}
+                    </span>
                 </div>
             </div>
         </div>

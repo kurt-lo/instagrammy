@@ -3,6 +3,7 @@ import useUserStore from "../../store/useUserStore";
 import { useRef } from "react";
 import UpdateOwnProfile from "./UpdateOwnProfile";
 import useFollowAndUnfollowUser from '../hooks/useFollowAndUnfollowUser'
+import useFetchUserPosts from "../hooks/useFetchUserPosts";
 
 const ProfileInfo = () => {
 
@@ -10,6 +11,7 @@ const ProfileInfo = () => {
   const userProfile = useUserStore(state => state.userProfile)
 
   const { handleFollowAndUnfollowUser, isFollowing, isLoading } = useFollowAndUnfollowUser(userProfile?.uid)
+  const { posts } = useFetchUserPosts()
 
   // for dialog in updateprofile
   const dialog = useRef()
@@ -36,7 +38,7 @@ const ProfileInfo = () => {
             )}
           </div>
           <div className="flex gap-[2rem] pt-[1rem]">
-            <span>{userProfile.posts.length} Posts</span>
+            <span>{posts.length} Posts</span>
             <span>{userProfile.followers.length} Followers</span>
             <span>{userProfile.following.length} Following</span>
           </div>

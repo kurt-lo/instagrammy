@@ -1,4 +1,4 @@
-import { Avatar, Tooltip, Dialog, IconButton, Input, Button } from "@material-tailwind/react";
+import { Avatar, Tooltip, Dialog, IconButton, Input, Button, Textarea } from "@material-tailwind/react";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoHomeFill } from "react-icons/go";
 import { GoSearch } from "react-icons/go";
@@ -13,6 +13,8 @@ import useUserStore from "../../store/useUserStore";
 import { useRef, useState } from "react";
 import useSearchUser from "../hooks/useSearchUser";
 import SuggestionUsers from "../Suggestion/SuggestionUsers";
+import usePreviewImage from "../hooks/usePreviewImage";
+import useCreatePost from "../hooks/useCreatePost";
 
 const aClass = 'flex items-center justify-center md:px-[.5rem] md:py-[.5rem] md:justify-start md:gap-[1rem] cursor-pointer rounded-md md:hover:bg-white md:hover:text-darkBlue duration-300 ease-in-out'
 
@@ -28,12 +30,37 @@ const Sidebar = () => {
         e.preventDefault()
         fetchUser(searchRef.current.value)
     }
-    console.log(searchUser)
+    // console.log(searchUser)
 
     //for opening and closing the search modal
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(!open);
+    const handleOpen = () => setOpen(prevState => !prevState);
 
+    // ________THIS IS FOR THE CREATE MODAL_______ //
+    //for opening and closing the create post modal
+    const [openCreatePost, setOpenCreatePost] = useState(false);
+    const handleOpenCreatePost = () => setOpenCreatePost(prevState => !prevState);
+
+    const [caption, setCaption] = useState('')
+    const postFileRef = useRef() // this is for the button when selecting image for creating post
+    const { selectedFile,
+        handleImageChange,
+        setSelectedFile,
+        showAlert,
+        alertMessage,
+        showAlertFunction } = usePreviewImage()
+    const { isLoading: isLoadingPost , handleCreatePost } = useCreatePost()
+    const handleCreatePostButton = async () => {
+        try {
+            await handleCreatePost(selectedFile, caption)
+            setCaption('')
+            setSelectedFile(null)
+            handleOpenCreatePost()
+            console.log("Post success")
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 
     return (
         <>
@@ -69,7 +96,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <Tooltip content="Create" placement="right" className='md:hidden'>
-                            <a className={aClass}>
+                            <a className={aClass} onClick={handleOpenCreatePost}>
                                 <LuPlusSquare className="h-6 w-6" />
                                 <span className="hidden md:block">Create</span>
                             </a>
@@ -101,17 +128,75 @@ const Sidebar = () => {
                     <AiOutlineClose size={22} />
                 </IconButton>
                 <h2 className='text-lg py-[1.2rem] text-darkBlue'>Search by Username</h2>
-                    <div className='relative'>
-                        <Input type='text' label="Username" inputRef={searchRef} />
-                        <Button variant="text" className='!absolute right-1 bottom-0'
-                            type="submit"
-                            loading={isLoading}
-                            onClick={handleSearch}
-                        >
-                            Search
-                        </Button>
-                    </div>
+                <div className='relative'>
+                    <Input type='text' label="Username" inputRef={searchRef} />
+                    <Button variant="text" className='!absolute right-1 bottom-0'
+                        type="submit"
+                        loading={isLoading}
+                        onClick={handleSearch}
+                    >
+                        Search
+                    </Button>
+                </div>
                 {searchUser && <SuggestionUsers searchUser={searchUser} setSearchUser={setSearchUser} userColor='black' />}
+            </Dialog>
+            {/* THIS IS FOR THE CREATE POST */}
+            <Dialog open={openCreatePost} handler={handleOpenCreatePost} className="py-[2rem] px-[4rem]" size="xs">
+                <IconButton variant='text' className='flex !absolute top-2 right-2 cursor-pointer'
+                    onClick={handleOpenCreatePost}
+                >
+                    <AiOutlineClose size={22} />
+                </IconButton>
+                <h2 className='text-lg py-[1.2rem] text-darkBlue'>Create Post</h2>
+                <div className="">
+                    <Textarea variant="outlined" rows={8} label="Post" value={caption} onChange={(e) => setCaption(e.target.value)} />
+                    {selectedFile && (
+                        <div className="flex relative justify-center items-center">
+                            <img src={selectedFile} alt="Post image" />
+                            <IconButton variant='text' className='flex !absolute top-2 right-2 cursor-pointer'
+                                onClick={() => setSelectedFile('')}
+                            >
+                                <AiOutlineClose size={22} />
+                            </IconButton>
+                        </div>
+                    )}
+                    <div className="flex w-full justify-between py-1.5">
+                        <div>
+                            <IconButton variant="text" color="blue-gray" size="sm"
+                                onClick={() => postFileRef.current.click()}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    className="h-4 w-4"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
+                                    />
+                                </svg>
+                            </IconButton>
+                            <input type="file" hidden ref={postFileRef} onChange={handleImageChange} />
+                        </div>
+                        <div className="flex gap-2">
+                            <Button size="sm" color="red" variant="text" className="rounded-md"
+                                onClick={handleOpenCreatePost}
+                            >
+                                Cancel
+                            </Button>
+                            <Button size="sm" className="rounded-md"
+                                loading={isLoadingPost}
+                                onClick={handleCreatePostButton}
+                            >
+                                Post
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             </Dialog>
         </>
     )
