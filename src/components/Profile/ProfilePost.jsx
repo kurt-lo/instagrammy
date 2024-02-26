@@ -15,6 +15,7 @@ import useUserStore from "../../store/useUserStore";
 import { deleteObject, ref } from "firebase/storage";
 import { firestore, storage } from "../../firebase";
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import useCreateComment from "../hooks/useCreateComment";
 
 const ProfilePost = () => {
 
@@ -22,6 +23,7 @@ const ProfilePost = () => {
   const userProfile = useUserStore(state => state.userProfile)
   const deletePost = useUserStore(state => state.deletePost)
   const { isLoading, posts } = useFetchUserPosts()
+  const { isCommenting, handleCreateComment } = useCreateComment()
 
   //for opening the post modal
   const [open, setOpen] = useState(false);
@@ -29,6 +31,8 @@ const ProfilePost = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   // State to manage the post
   const [isDeleted, setIsDeleted] = useState(false)
+  // State for comment input
+  const [comment, setComment] = useState('')
 
   const handleOpen = (post) => {
     setSelectedPost(post);
@@ -59,20 +63,31 @@ const ProfilePost = () => {
 
       deletePost(selectedPost.id);
       window.location.reload()
+      alert("Success", "Post deleted successfully", "success");
       console.log("Success", "Post deleted successfully", "success");
     } catch (error) {
       console.log(error.message)
+      alert(error.message)
     } finally {
       setIsDeleted(false)
     }
   }
+
+  // for submitting the comment on the post
+  const handleSubmitComment = async () => {
+    await handleCreateComment(selectedPost.id, comment)
+    setComment('')
+  }
+
+
   // console.log(posts)
+  // console.log(selectedPost)
   return (
     <>
       <div className="w-[90%] xl:w-[60%]">
         <ProfileNavigation />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 pt-[1rem]">
-           {/* THIS WILL EXECUTE IF THERE IS NO POST */}
+          {/* THIS WILL EXECUTE IF THERE IS NO POST */}
           {!isLoading && posts.length === 0 && (
             <p className="text-center text-gray-200 font-medium">There are no posts yet.</p>
           )}
@@ -100,13 +115,13 @@ const ProfilePost = () => {
                     loading={isDeleted}
                     onClick={handleDeletePost}
                   >
-                    <MdDeleteOutline size={20}/>
+                    <MdDeleteOutline size={20} />
                   </Button>
                 )}
               </div>
               <div className="h-[1px] bg-gray-300"></div>
               <div className=" overflow-y-scroll h-[10rem] sm:h-[5rem] lg:h-[20rem]">
-                <ProfileComment post={selectedPost} />
+                <ProfileComment selectedPost={selectedPost} posts={posts} />
               </div>
               <div className="mt-auto pb-[2rem] sm:pb-2 md:pb-[2rem] pt-[2rem] sm:pt-0">
                 <div className="flex gap-2">
@@ -115,8 +130,15 @@ const ProfilePost = () => {
                 </div>
                 <span className="text-sm font-[700]">{selectedPost.likes || 0} likes</span>
                 <div className="flex w-full justify-between items-center gap-[.5rem] p-0 bottom-0">
-                  <input type="text" placeholder="Add a comment..." className="text-sm w-full bg-transparent focus:border-darkBlue focus:border-b focus:outline-none" />
-                  <span className="text-sm font-[700]">Post</span>
+                  <input value={comment} type="text" placeholder="Add a comment..." className="text-sm w-full bg-transparent focus:border-darkBlue focus:border-b focus:outline-none"
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                  <Button className="text-[12px] font-[700]"
+                    size="sm"
+                    loading={isCommenting}
+                    onClick={handleSubmitComment}
+                  >
+                    Post</Button>
                 </div>
               </div>
             </div>
